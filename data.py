@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
+import torch
 from torchvision import transforms, datasets
 import matplotlib.pyplot as plt
-from torchvision.datasets import MNIST
-from torch.utils.data import DataLoader
 
 def get_data(root='Wallpapers', img_size=(32, 32)):
     data_transform = transforms.Compose([
@@ -12,11 +11,20 @@ def get_data(root='Wallpapers', img_size=(32, 32)):
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ])
     
-    dataset = MNIST('./data', transform=data_transform, download=True)
-    dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
-    show_sample(dataset)
+    dataset = datasets.ImageFolder(
+        root=root,
+        transform=data_transform)
+    
+    dataset_loader = torch.utils.data.DataLoader(
+        dataset,
+        batch_size=4,
+        shuffle=True,
+        num_workers=0 # must be 0 or else dataloader fails during training, need to investigate
+    )
 
-    return dataset, dataloader
+    show_sample(dataset)
+    
+    return dataset, dataset_loader
 
 def show_sample(dataset):
     index = 0
