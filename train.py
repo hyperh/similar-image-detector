@@ -27,10 +27,9 @@ def log(epoch, step, loss, start_time, autoencoder, train_set, axes):
     
     
     img_size = train_set.__getitem__(0)[0][0].size()
-    num_pixels = img_size[0] * img_size[1]
     
     for i in range(N_TEST_IMG):
-        img = train_set.__getitem__(i)[0][0].view(-1, num_pixels)
+        img = train_set.__getitem__(i)[0].unsqueeze(0)
         _, decoded_data = autoencoder(img)
         axes[1][i].clear()
         axes[1][i].imshow(np.reshape(decoded_data.data.numpy(), img_size))
@@ -47,25 +46,19 @@ def init_plot():
     print('sample images')
     for i in range(N_TEST_IMG):
         axes[0][i].imshow(train_set.__getitem__(i)[0][0])
-        print(train_set.imgs[i][0])
     
     return figure, axes
 
 def train(n_epochs, train_loader, autoencoder, img_size, loss_func, train_set):
     figure, axes = init_plot()
-    
-    num_pixels = img_size[0] * img_size[1]
-    
+        
     start = time.time()
     
     for epoch in range(n_epochs):
         for step, (x, _) in enumerate(train_loader):
-            b_x = x.view(-1, num_pixels)   # batch x, shape (batch, num_pixels)
-            b_y = x.view(-1, num_pixels)   # batch y, shape (batch, num_pixels)
+            encoded, decoded = autoencoder(x)
             
-            encoded, decoded = autoencoder(b_x)
-            
-            loss = loss_func(decoded, b_y)      # mean square error
+            loss = loss_func(decoded, x)      # mean square error
             optimizer.zero_grad()               # clear gradients for this training step
             loss.backward()                     # backpropagation, compute gradients
             optimizer.step()                    # apply gradients

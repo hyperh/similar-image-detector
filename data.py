@@ -1,33 +1,26 @@
 # -*- coding: utf-8 -*-
-import torch
 from torchvision import transforms, datasets
 import matplotlib.pyplot as plt
+from torchvision.datasets import MNIST
+from torch.utils.data import DataLoader
 
-def get_data(root='Wallpapers', img_size=(64, 64)):
+def get_data(root='Wallpapers', img_size=(32, 32)):
     data_transform = transforms.Compose([
         transforms.Resize(img_size),
-        transforms.ToTensor()
+        transforms.Grayscale(num_output_channels=1),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ])
     
-    dataset = datasets.ImageFolder(
-        root=root,
-        transform=data_transform)
-    
-    dataset_loader = torch.utils.data.DataLoader(
-        dataset,
-        batch_size=4, shuffle=True,
-        num_workers=4)
-
+    dataset = MNIST('./data', transform=data_transform, download=True)
+    dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
     show_sample(dataset)
-    
-    return dataset, dataset_loader
+
+    return dataset, dataloader
 
 def show_sample(dataset):
     index = 0
-    print(dataset.imgs[index][0])
-    single_channel = dataset.__getitem__(index)[0][1]
-    
-    print(type(single_channel))
-    print(single_channel.size())
-    plt.imshow(single_channel.numpy())
+    img = dataset.__getitem__(index)[0][0]
+    print(img.size())
+    plt.imshow(img.numpy())
     plt.show()
