@@ -5,29 +5,25 @@ import torch.nn as nn
 class Autoencoder(nn.Module):
     def __init__(self, img_size):
         super(Autoencoder, self).__init__()
-        
-        img_pixels = img_size[0] * img_size[1]
-        
+                
         self.encoder = nn.Sequential(
-            nn.Linear(img_pixels, 128),
-            nn.Tanh(),
-            nn.Linear(128, 64),
-            nn.Tanh(),
-            nn.Linear(64, 12),
-            nn.Tanh(),
-            nn.Linear(12, 3),
+            nn.Conv2d(1, 16, 3, stride=3, padding=1),
+            nn.ReLU(True),
+            nn.MaxPool2d(2, stride=2),
+            nn.Conv2d(16, 8, 3, stride=2, padding=1),
+            nn.ReLU(True),
+            nn.MaxPool2d(2, stride=1)
         )
         
         self.decoder = nn.Sequential(
-            nn.Linear(3, 12),
-            nn.Tanh(),
-            nn.Linear(12, 64),
-            nn.Tanh(),
-            nn.Linear(64, 128),
-            nn.Tanh(),
-            nn.Linear(128, img_pixels),
-            nn.Sigmoid() # compress to a range (0, 1)
+            nn.ConvTranspose2d(8, 16, 3, stride=2),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(16, 8, 5, stride=3, padding=1),
+            nn.ReLU(True),
+            nn.ConvTranspose2d(8, 1, 2, stride=2, padding=1),
+            nn.Tanh()
         )
+
         
     def forward(self, x):
         encoded = self.encoder(x)
