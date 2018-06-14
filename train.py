@@ -80,3 +80,4 @@ loss_func = nn.MSELoss()
 
 
 train(n_epochs, train_loader, autoencoder, img_size, loss_func, train_set)
+input("Press Enter to continue...")
