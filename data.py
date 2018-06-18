@@ -3,7 +3,7 @@ import torch
 from torchvision import transforms, datasets
 import matplotlib.pyplot as plt
 
-def get_data(root='Wallpapers', img_size=(32, 32)):
+def get_data(root='Wallpapers', img_size=(28, 28), batch_size=4, shuffle=True):
     data_transform = transforms.Compose([
         transforms.Resize(img_size),
         transforms.Grayscale(num_output_channels=1),
@@ -17,12 +17,12 @@ def get_data(root='Wallpapers', img_size=(32, 32)):
     
     dataset_loader = torch.utils.data.DataLoader(
         dataset,
-        batch_size=4,
-        shuffle=True,
+        batch_size=batch_size,
+        shuffle=shuffle,
         num_workers=0 # must be 0 or else dataloader fails during training, need to investigate
     )
 
-    show_sample(dataset)
+    # show_sample(dataset)
     
     return dataset, dataset_loader
 
