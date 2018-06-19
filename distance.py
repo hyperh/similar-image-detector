@@ -1,9 +1,7 @@
 import torch
-import matplotlib.pyplot as plt
 import itertools
 import operator
 import numpy as np
-import pathlib
 
 import data
 
