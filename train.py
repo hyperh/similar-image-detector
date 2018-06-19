@@ -5,6 +5,7 @@ import time
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import datetime
 
 from autoencoder import Autoencoder
 import data
@@ -66,7 +67,8 @@ def train(n_epochs, train_loader, autoencoder, img_size, loss_func, train_set):
             if step % 100 == 0:
                 log(epoch, step, loss, start, autoencoder, train_set, axes)
     
-    save_filename = 'trained_model.pt'
+    now = str(datetime.datetime.now()).replace(':', '-').replace(' ', '-')
+    save_filename = 'trained_model_{}.pt'.format(now)
     torch.save(autoencoder, save_filename)
     print('Saved as %s' % save_filename)
 
