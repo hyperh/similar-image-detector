@@ -3,13 +3,15 @@ import matplotlib.pyplot as plt
 import itertools
 import operator
 import numpy as np
+import pathlib
+
 import data
 
 def get_all_img_paths(dataset):
 	# Return a numpy array so we can use mask arrays
 	return np.array([i[0] for i in dataset.imgs])
 
-path = 'trained_model.pt'
+path = 'trained_model_2018-06-18-12-21-39.577832.pt'
 autoencoder = torch.load(path)
 
 img_size = (28, 28)
@@ -38,7 +40,7 @@ for i, encoded in enumerate(encodeds):
 	all_same_encoded_tensor = torch.cat(all_same_encoded, 0)
 
 	distances = pdist(all_same_encoded_tensor, encodeds_tensor)	
-	threshold = 1.00000e-02 * 1
+	threshold = 1.00000e-01 * 1
 	similar = [True if d < threshold else False for d in distances]
 
 	if sum(similar) > 1:
