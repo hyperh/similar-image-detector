@@ -94,12 +94,14 @@ def find_similar_images(save_path, img_paths, all_distances, threshold=1.00000e-
 	for i, distances in enumerate(all_distances):
 		similar_mask = get_similar_images_boolean_mask(distances, threshold)
 		similar_images = img_paths[similar_mask]
+
+		# Trim list to only unique entries that have at least 1 similar image
 		if len(similar_images) > 1:
 			key = str(similar_images)
 			all_similar[key] = similar_images
 
 	all_similar_list = []
-	for key, value in all_similar.items():
+	for _, value in all_similar.items():
 		all_similar_list.append(value)
 
 	save(save_path, all_similar_list)
