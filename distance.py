@@ -1,3 +1,4 @@
+import csv
 import torch
 import itertools
 import operator
@@ -63,10 +64,17 @@ def calc_distances(encodeds, encodeds_tensor):
 
 	return all_distances
 
+def save(save_path, data):
+	file_name = 'similar.csv'
+	file_path = '{}/{}'.format(save_path, file_name)
+	with open(file_path, 'w') as myfile:
+	    wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+	    wr.writerow(data)
+
 def get_similar_images_boolean_mask(distances, threshold=1.00000e-01 * 1):
 	return [True if d < threshold else False for d in distances]
 	
-def find_similar_images(img_paths, all_distances, threshold=1.00000e-01 * 1):
+def find_similar_images(save_path, img_paths, all_distances, threshold=1.00000e-01 * 1):
 	"""
 	Parameters
 	----------
@@ -85,4 +93,6 @@ def find_similar_images(img_paths, all_distances, threshold=1.00000e-01 * 1):
 	for i, distances in enumerate(all_distances):
 		similar = get_similar_images_boolean_mask(distances, threshold)
 		all_similar.append(img_paths[similar])
+
+	save(save_path, all_similar)
 	return all_similar
