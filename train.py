@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 import torch
-import torch.nn as nn
 import time
 import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-from autoencoder import Autoencoder
-import data
 import save
 
 NUM_TEST_IMG_DEFAULT = 5
@@ -19,14 +16,14 @@ def get_time_since(since):
     s -= m * 60
     return '%dm %ds' % (m, s)
 
-def log(epoch, step, loss, start_time, autoencoder, train_set, axes, save_path, num_test_img=NUM_TEST_IMG_DEFAULT):
+def log(epoch, step, loss, start_time, autoencoder, axes, save_path, data, num_img=NUM_TEST_IMG_DEFAULT):
     time_since = get_time_since(start_time)
     print(time_since, 'Epoch: {}, Step: {}'.format(epoch, step), '| train loss: %.4f' % loss.data.numpy())
     
-    img_size = train_set.__getitem__(0)[0][0].size()
+    img_size = data.__getitem__(0)[0][0].size()
     
-    for i in range(num_test_img):
-        img = train_set.__getitem__(i)[0].unsqueeze(0)
+    for i in range(num_img):
+        img = data.__getitem__(i)[0].unsqueeze(0)
         _, decoded_data = autoencoder(img)
         axes[1][i].clear()
         axes[1][i].imshow(np.reshape(decoded_data.data.numpy(), img_size))
@@ -39,12 +36,12 @@ def log(epoch, step, loss, start_time, autoencoder, train_set, axes, save_path, 
             )
         )
     
-def init_plot(save_path, num_test_img=NUM_TEST_IMG_DEFAULT):
+def init_plot(save_path, data, num_img=NUM_TEST_IMG_DEFAULT):
     rows = 2
-    figure, axes = plt.subplots(rows, num_test_img, figsize=(num_test_img * 2, rows * 2))
+    figure, axes = plt.subplots(rows, num_img, figsize=(num_img * 2, rows * 2))
     plt.ion() # continuously plot
-    for i in range(num_test_img):
-        axes[0][i].imshow(train_set.__getitem__(i)[0][0])
+    for i in range(num_img):
+        axes[0][i].imshow(data.__getitem__(i)[0][0])
     figure.savefig(get_save_file_path_figure(save_path, get_figure_suffix(0, 0)))
     
     return figure, axes
@@ -67,10 +64,19 @@ def save_model(save_path, autoencoder):
     save_file_path = get_save_file_path_model(save_path)
     torch.save(autoencoder, save_file_path)
 
-def train(n_epochs, train_loader, autoencoder, img_size, loss_func, train_set, save_path):
+def train(
+    n_epochs,
+    train_loader,
+    autoencoder,
+    optimizer,
+    img_size,
+    loss_func,
+    train_set,
+    save_path
+    ):
     save.mkdir(save_path)
 
-    figure, axes = init_plot(save_path)        
+    figure, axes = init_plot(save_path, data=train_set)        
     start = time.time()
 
     losses = []
@@ -86,29 +92,8 @@ def train(n_epochs, train_loader, autoencoder, img_size, loss_func, train_set, s
             optimizer.step() # apply gradients
             
             if step % steps_until_log == 0:
-                log(epoch, step, loss, start, autoencoder, train_set, axes, save_path)
+                log(epoch, step, loss, start, autoencoder, axes, save_path, data=train_set)
     
     save_loss_plot(save_path, losses)
     save_model(save_path, autoencoder)
     print('Saved to {}'.format(save_path))
-
-img_size = (28, 28)
-learning_rate = 0.005
-n_epochs = 1
-       
-train_set, train_loader = data.get_data(img_size=img_size)
-autoencoder = Autoencoder(img_size=img_size)
-optimizer = torch.optim.Adam(autoencoder.parameters(), lr=learning_rate)
-loss_func = nn.MSELoss()
-
-timestamp = save.get_timestamp_for_save()
-
-train(
-    n_epochs, 
-    train_loader, 
-    autoencoder, 
-    img_size, 
-    loss_func,
-    train_set,
-    save_path=save.get_save_path(timestamp)
-    )
