@@ -89,10 +89,18 @@ def find_similar_images(save_path, img_paths, all_distances, threshold=1.00000e-
 	list<list<string>>
 		A list of length NUM_IMAGES, each entry being an image and containing a list (of length 0 to NUM_IMAGES) of images to which they are similar to
 	"""	
-	all_similar = []
-	for i, distances in enumerate(all_distances):
-		similar = get_similar_images_boolean_mask(distances, threshold)
-		all_similar.append(img_paths[similar])
+	all_similar = {}
 
-	save(save_path, all_similar)
-	return all_similar
+	for i, distances in enumerate(all_distances):
+		similar_mask = get_similar_images_boolean_mask(distances, threshold)
+		similar_images = img_paths[similar_mask]
+		if len(similar_images) > 1:
+			key = str(similar_images)
+			all_similar[key] = similar_images
+
+	all_similar_list = []
+	for key, value in all_similar.items():
+		all_similar_list.append(value)
+
+	save(save_path, all_similar_list)
+	return all_similar_list
