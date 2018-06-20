@@ -19,8 +19,8 @@ def Image(file):
 	})
 
 	return """
-	<a href="./{file}" style="{style_wrapper}">
-		<img src="{file}" style="{style_img}">
+	<a href="../../{file}" style="{style_wrapper}">
+		<img src="../../{file}" style="{style_img}">
 		{file}
 	</a>
 	""".format(
@@ -72,3 +72,9 @@ def save(save_path, data):
 def save_results_html(save_path, data):
 	results = get_results_html(data)
 	save(save_path, results)
+
+# import json
+# folder = 'saves/2018-06-18-23-05-40.687803'
+# with open('{}/similar.json'.format(folder)) as f:
+#     data = json.load(f)
+# save_results_html(folder, data)
