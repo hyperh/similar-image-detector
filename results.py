@@ -12,42 +12,57 @@ def Image(file):
 	styles = create_styles({
 		"wrapper": [
 			'display: flex',
-			'flex-direction: row'
+			'flex-direction: column',
+			'margin: 0 10px'
+		],
+		"img": [
+			'width: 200px'
 		]
 	})
 
 	return """
-<div style="{style_wrapper}">
-	<img src="{file}">
-	<a href="./{file}">{file}</a>
-</div>
+	<a href="./{file}" style="{style_wrapper}">
+		<img src="{file}" style="{style_img}">
+		{file}
+	</a>
 	""".format(
 		style_wrapper=styles['wrapper'],
+		style_img=styles['img'],
 		file=file)
 
-def get_images(imgs):
-	links = ''.join([Image(img) for img in imgs])
-	formatted = """
-<div>{links}</div>
-	""".format(links=links)
-	return formatted
+def ImageGroup(name, children):
+	styles = create_styles({
+		"wrapper": [
+			'display: flex',
+			'flex-direction: row',
+			'margin: 10px 0'
+		],
+	})
 
-def get_img_groups(data):
-	groups = ''.join([get_images(img_group) for img_group in data])
-	formatted = """
-<div>{groups}</div>
-	""".format(groups=groups)
-	return formatted
+	return """
+	<div style="{style_wrapper}">
+		<h2>{name}</h2>
+		{children}
+	</div>
+	""".format(
+		name=name,
+		style_wrapper=styles['wrapper'],
+		children=children)
+
+def get_image_group(name, imgs):
+	images = ''.join([Image(img) for img in imgs])
+	image_group = ImageGroup(name=name, children=images)
+	return image_group
 
 def get_results_html(data):
-	results = get_img_groups(data)
+	image_groups = ''.join([get_image_group(i + 1, d) for i, d in enumerate(data)])
 
 	html = """
-<html>
-	<h1>Results</h1>
-	<div>{results}</div>
-</html>
-	""".format(results=results)
+	<html>
+		<h1>Results</h1>
+		<div>{results}</div>
+	</html>
+	""".format(results=image_groups)
 	return html
 
 def save(save_path, data):
