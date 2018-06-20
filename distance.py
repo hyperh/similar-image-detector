@@ -1,4 +1,3 @@
-import csv
 import torch
 import itertools
 import operator
