@@ -49,8 +49,11 @@ def init_plot(save_path, data, num_img=NUM_TEST_IMG_DEFAULT):
 def get_figure_suffix(epoch, step):
     return 'epoch-{}-step-{}'.format(epoch, step)
 
+def get_save_path_figure(save_path):
+    return '{}/sample-images';
+
 def get_save_file_path_figure(save_path, suffix):
-    return '{}/figure-{}.png'.format(save_path, suffix)
+    return '{}/figure-{}.png'.format(get_save_path_figure(save_path), suffix)
 
 def get_save_file_path_model(save_path):
     return '{}/trained_model.pt'.format(save_path)
@@ -75,6 +78,7 @@ def train(
     save_path
     ):
     save.mkdir(save_path)
+    save.mkdir(get_save_path_figure(save_path))
 
     figure, axes = init_plot(save_path, data=train_set)        
     start = time.time()
