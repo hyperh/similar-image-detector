@@ -7,7 +7,7 @@ folder = 'saves/2018-06-18-23-05-40.687803'
 model_path = '{}/trained_model.pt'.format(folder)
 img_size = (28, 28)
 autoencoder = torch.load(model_path)
-threshold = 5.00000e-02 * 1
+threshold = 1.05e-0
 
 dataset, dataset_loader = data.get_data(
 	img_size=img_size, batch_size=1, shuffle=False)
