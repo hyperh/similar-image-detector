@@ -1,5 +1,3 @@
-import json
-
 def create_styles(styles):
 	"""
 	Parameters
