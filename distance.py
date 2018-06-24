@@ -37,20 +37,23 @@ def get_encodeds_tensor(encodeds):
 	encodeds_tensor = torch.cat(encodeds, 0)
 	return encodeds_tensor
 
-def calc_distances(encodeds, encodeds_tensor):
+def calc_distances(encodeds):
 	"""
 	Parameters
 	----------
 	encodeds: list<torch.Tensor>
 		A list of length of NUM_IMAGES, each entry containing a tensor of size [1, FLATTENED]
-	encodeds_tensor: torch.Tensor
-		A tensor of size [NUM_IMAGES, FLATTENED]
 
 	Returns
 	-------
 	list<torch.Tensor>
 		A list of length NUM_IMAGES, each entry containing a tensor of size NUM_IMAGES
 	"""
+	
+	# encodeds_tensor: torch.Tensor
+	# A tensor of size [NUM_IMAGES, FLATTENED]
+	encodeds_tensor = get_encodeds_tensor(encodeds)
+
 	pdist = torch.nn.PairwiseDistance(p=2)
 
 	all_distances = []
