@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 def create_styles(styles):
 	"""
 	Parameters
@@ -57,21 +59,25 @@ def get_results_html(data):
 
 	html = """
 	<html>
-		<h1>Results</h1>
+		<h1>Results - {num_similar} simliar</h1>
 		<div>{results}</div>
 	</html>
-	""".format(results=image_groups)
+	""".format(num_similar=len(data), results=image_groups)
 	return html
 
-def save(save_path, data):
-	file_name = 'results.html'
+def save(file_name, save_path, data):
 	file_path = '{}/{}'.format(save_path, file_name)
 	with open(file_path, 'w') as myfile:
 		myfile.write(data)
 
-def save_results_html(save_path, data):
+def save_results_html(file_name, save_path, data):
 	results = get_results_html(data)
-	save(save_path, results)
+	save(file_name, save_path, results)
+
+def save_similar_images_plot(save_path, num_similar, thresholds):
+    figure = plt.figure()
+    plt.plot(num_similar, thresholds)
+    figure.savefig('{}/num_similar_by_threshold.png'.format(save_path))
 
 # import json
 # folder = 'saves/2018-06-18-23-05-40.687803'
