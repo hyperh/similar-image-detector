@@ -19,8 +19,15 @@ dataset, dataset_loader = data.get_data(
 	img_size=img_size, batch_size=1, shuffle=False)
 
 img_paths = distance.get_all_img_paths(dataset)
-encodeds = distance.get_encodeds(dataset, dataset_loader, autoencoder)
-distance.save_encodeds(folder, encodeds)
+
+encodeds_file = '{}/encodeds.pt'.format(folder)
+encodeds = []
+
+try:
+	encodeds = torch.load(encodeds_file)
+except Exception as e:
+	encodeds = distance.get_encodeds(dataset, dataset_loader, autoencoder)
+	distance.save_encodeds(folder, encodeds)
 
 time_since = time_utils.get_time_since(start)
 print('{}: Calculating distances...'.format(time_since))
