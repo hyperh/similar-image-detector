@@ -76,7 +76,7 @@ def save_results_html(file_name, save_path, data):
 
 def save_similar_images_plot(save_path, num_similar, thresholds):
     figure = plt.figure()
-    plt.plot(num_similar, thresholds)
+    plt.plot(thresholds, num_similar)
     figure.savefig('{}/num_similar_by_threshold.png'.format(save_path))
 
 # import json
