@@ -64,15 +64,6 @@ def calc_distances(encodeds, encodeds_tensor):
 
 	return all_distances
 
-def save(save_path, data):
-	file_name = 'similar.json'
-	file_path = '{}/{}'.format(save_path, file_name)
-
-	json_serializable = [d.tolist() for d in data]
-
-	with open(file_path, 'w') as myfile:
-		json.dump(json_serializable, myfile)
-
 def get_similar_images_boolean_mask(distances, threshold=1.00000e-01 * 1):
 	return [True if d < threshold else False for d in distances]
 	
@@ -106,5 +97,4 @@ def find_similar_images(save_path, img_paths, all_distances, threshold=1.00000e-
 	for _, value in all_similar.items():
 		all_similar_list.append(value)
 
-	save(save_path, all_similar_list)
 	return all_similar_list
