@@ -1,23 +1,17 @@
 # -*- coding: utf-8 -*-
 import torch
 import time
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 
+import time_utils
 import save
 
 NUM_TEST_IMG_DEFAULT = 5
 steps_until_log = 100
 
-def get_time_since(since):
-    s = time.time() - since
-    m = math.floor(s / 60)
-    s -= m * 60
-    return '%dm %ds' % (m, s)
-
 def log(epoch, step, loss, start_time, autoencoder, axes, save_path, data, num_img=NUM_TEST_IMG_DEFAULT):
-    time_since = get_time_since(start_time)
+    time_since = time_utils.get_time_since(start_time)
     print(time_since, 'Epoch: {}, Step: {}'.format(epoch, step), '| train loss: %.4f' % loss.data.numpy())
     
     img_size = data.__getitem__(0)[0][0].size()

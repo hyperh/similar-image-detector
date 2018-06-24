@@ -1,7 +1,13 @@
+import time
 import torch
+
 import data
 import distance
 import results
+import time_utils
+
+start = time.time()
+time_since = time_utils.get_time_since(start)
 
 folder = 'saves/2018-06-18-23-05-40.687803'
 model_path = '{}/trained_model.pt'.format(folder)
@@ -15,11 +21,14 @@ dataset, dataset_loader = data.get_data(
 img_paths = distance.get_all_img_paths(dataset)
 encodeds = distance.get_encodeds(dataset, dataset_loader, autoencoder)
 encodeds_tensor = distance.get_encodeds_tensor(encodeds)
+time_since = time_utils.get_time_since(start)
+print('{}: Calculating distances...'.format(time_since))
 all_distances = distance.calc_distances(encodeds, encodeds_tensor)
 
 num_similar = []
 for threshold in thresholds:
-	print('Finding similar images for threshold {}...'.format(threshold))
+	time_since = time_utils.get_time_since(start)
+	print('{}: Finding similar images for threshold {}...'.format(time_since, threshold))
 	similar_images = distance.find_similar_images(folder, img_paths, all_distances, threshold)
 	result_file = 'results_threshold_{}.html'.format(threshold)
 	results.save_results_html(result_file, folder, similar_images)
