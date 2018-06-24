@@ -2,7 +2,6 @@ import torch
 import itertools
 import operator
 import numpy as np
-import json
 
 def get_all_img_paths(dataset):
 	# Return a numpy array so we can use mask arrays
@@ -23,6 +22,10 @@ def get_encodeds(dataset, dataset_loader, autoencoder):
 		encodeds.append(flattened)
 	return encodeds
 
+def save_encodeds(save_path, data):
+	file_path = '{}/{}'.format(save_path, 'encodeds.pt')
+	torch.save(data, file_path)
+	
 def get_encodeds_tensor(encodeds):
 	"""
 	Parameters
