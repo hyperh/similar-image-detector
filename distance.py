@@ -89,7 +89,7 @@ def find_similar_images(save_path, img_paths, all_distances, threshold=1.00000e-
 	Returns
 	-------
 	list<numpy.ndarray<string>>
-		A list of length NUM_IMAGES, each entry being an image and containing an ndarray (of length 0 to NUM_IMAGES) of images to which they are similar to
+		A list of images with similar images, each entry being an image and containing an ndarray (of length 0 to NUM_IMAGES) of images to which they are similar to
 	"""	
 	all_similar = {}
 
