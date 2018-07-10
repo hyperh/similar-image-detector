@@ -44,7 +44,7 @@ def get_figure_suffix(epoch, step):
     return 'epoch-{}-step-{}'.format(epoch, step)
 
 def get_save_path_figure(save_path):
-    return '{}/sample-images';
+    return '{}/sample-images'.format(save_path);
 
 def get_save_file_path_figure(save_path, suffix):
     return '{}/figure-{}.png'.format(get_save_path_figure(save_path), suffix)
