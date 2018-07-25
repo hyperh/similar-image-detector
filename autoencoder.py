@@ -7,7 +7,7 @@ class Autoencoder(nn.Module):
         super(Autoencoder, self).__init__()
                 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 16, 3, stride=3, padding=1),
+            nn.Conv2d(3, 16, 3, stride=3, padding=1),
             nn.ReLU(True),
             nn.MaxPool2d(2, stride=2),
             nn.Conv2d(16, 8, 3, stride=2, padding=1),
@@ -20,7 +20,7 @@ class Autoencoder(nn.Module):
             nn.ReLU(True),
             nn.ConvTranspose2d(16, 8, 5, stride=3, padding=1),
             nn.ReLU(True),
-            nn.ConvTranspose2d(8, 1, 2, stride=2, padding=1),
+            nn.ConvTranspose2d(8, 3, 2, stride=2, padding=1),
             nn.Tanh()
         )
 

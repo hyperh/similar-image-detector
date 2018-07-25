@@ -23,7 +23,10 @@ def log(epoch, step, loss, start_time, autoencoder, axes, save_path, data, num_i
         # https://www.cs.virginia.edu/~vicente/recognition/notebooks/image_processing_lab.html
         # imshow needs a numpy array with the channel dimension
         # as the the last dimension so we have to transpose things.
-        decoded_img = decoded_data.data[0].numpy().transpose(1, 2, 0)[:, :, 0]
+        decoded_img = decoded_data.data[0].numpy().transpose(1, 2, 0)
+
+        # Scale img to between [0, 1]
+        decoded_img = (decoded_img - np.min(decoded_img))/np.ptp(decoded_img)
 
         axes[1][i].clear()
         axes[1][i].imshow(decoded_img)
@@ -42,7 +45,7 @@ def init_plot(save_path, data, num_img=NUM_TEST_IMG_DEFAULT):
     plt.ion() # continuously plot
     for i in range(num_img):
         img_tensor = data.__getitem__(i)[0]
-        axes[0][i].imshow(img_tensor.numpy().transpose(1, 2, 0)[:,:,0])
+        axes[0][i].imshow(img_tensor.numpy().transpose(1, 2, 0))
     figure.savefig(get_save_file_path_figure(save_path, get_figure_suffix(0, 0)))
     
     return figure, axes
