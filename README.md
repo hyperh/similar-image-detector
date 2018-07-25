@@ -4,6 +4,8 @@ A tool to help you find similar images within a folder of images.
 
 Uses a convolutional autoencoder to encode images into a compressed representation.
 
+NOTE: repo is under heavy construction
+
 ## Training
 
 1. `activate pytorch`
